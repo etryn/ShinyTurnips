@@ -116,9 +116,11 @@ ui = fluidPage(
     #Define Form
     titlePanel("Ceylon Stalk Market"),
     
-    #Sidebar for all Data Entry fields
+    #Sidebar for all data entry fields and buttons
     sidebarLayout(
         sidebarPanel(
+            
+            #Main Entry Form
             div(
                 id = "form",
                 selectInput("name", "Name", ceylonMembers),
@@ -134,7 +136,11 @@ ui = fluidPage(
                              value = NULL,
                              min = 20,
                              max = 800),
-                actionButton("submit", "Submit", class = "btn-primary")
+                actionButton("submit", "Submit", class = "btn-primary"),
+                
+                #Add Refresh Button
+                shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }", functions = "refresh"),
+                actionButton("refresh", "Refresh", class = "btn-info"),
             ),
             
             #Submission Successful Message
@@ -199,6 +205,11 @@ server <- function(input, output, session) {
         shinyjs::reset("form")
         shinyjs::hide("form")
         shinyjs::show("submitted_msg")
+    })
+    
+    # Refresh Button
+    observeEvent(input$refresh, {
+        shinyjs::js$refresh()
     })
     
     # Display new form when "submit another price" is chosen
