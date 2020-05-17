@@ -9,7 +9,9 @@
 
 library(shiny)
 library(shinyjs)
-library(base)
+library(DT)
+library(tidyverse)
+library(lubridate)
 
 # List of Ceylon Participants
 ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani", "KGB", "Rachel", "Julie")
@@ -21,7 +23,25 @@ fieldsMandatory <- c("name", "price", "firstweek")
 fieldsAll <- c("name", "date", "ampm", "price", "firstweek")
 responsesDir <- file.path("responses")
 
-# Define UI for application that draws a histogram
+# Define data to display live in app
+loadData <- function() {
+    files <- list.files(file.path(responsesDir), full.names = TRUE)
+    data <- lapply(files, read.csv, stringsAsFactors = FALSE)
+    data <- dplyr::bind_rows(data)
+    data <- data %>%
+        pivot_wider(names_from = name, values_from = price) %>%
+        arrange(date, ampm) %>%
+        mutate(date = as.Date(date, origin = "1970-01-01")) %>%
+        mutate(
+               the.year = year(date),
+               the.week = epiweek(date)) %>%
+        filter(the.year == max(the.year) & the.week == max(the.week)) %>%
+        mutate(date = format(date, "%a %b %d")) %>%
+        select(-firstweek, -the.year, -the.week, Date = date, Window = ampm)
+    data
+}
+
+# UI
 ui = fluidPage(
     
     shinyjs::useShinyjs(),
@@ -39,7 +59,7 @@ ui = fluidPage(
         radioButtons("ampm", "AM or PM Price",
                      choiceNames = c("AM", "PM"),
                      choiceValues = c("am", "pm")),
-        numericInput("price", "Current Price",
+        numericInput("price", "Purchase or Sell Price",
                      value = NULL,
                      min = 20,
                      max = 800),
@@ -60,12 +80,15 @@ ui = fluidPage(
     shinyjs::hidden(
         span(id = "loading_msg", "Logging your price..."),
         div(id = "error",
-            div(br(), tags$b("Error: "), span(id = "error_msg"))
+            div(br(), tags$b("Error: Something went wrong"), span(id = "error_msg"))
         )
-    )
+    ),
+    
+    #View Current Week's Prices
+    DT::dataTableOutput("responsesTable"),
 )
 
-# Define server logic required to draw a histogram
+# Server
 server <- function(input, output, session) {
     
     # Enable the Submit button only when all mandatory fields are filled out
@@ -135,6 +158,13 @@ server <- function(input, output, session) {
     observeEvent(input$submit, {
         saveData(formData())
     })
+    
+    #Display Data
+    output$responsesTable <- DT::renderDataTable(
+        loadData(),
+        rownames = FALSE,
+        options = list(searching = FALSE, lengthChange = FALSE)
+    ) 
 }
 
 # Run the application 
