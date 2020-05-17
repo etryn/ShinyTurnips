@@ -45,6 +45,15 @@ ui = fluidPage(
                      max = 800),
         checkboxInput("firstweek", "This is my first week buying turnips in my own town.", value = FALSE),
         actionButton("submit", "Submit", class = "btn-primary")
+    ),
+    
+    #Hidden Submission Successful Div
+    shinyjs::hidden(
+        div(
+            id = "submitted_msg",
+            h3("Your turnip price has been logged!"),
+            actionLink("submit_another", "Submit another price")
+        )
     )
 )
 
@@ -63,6 +72,20 @@ server <- function(input, output, session) {
         
         shinyjs::toggleState(id = "submit", condition = mandatoryFilled)
     })
+    
+    # When submit button is pressed, acknowledge and hide/reset form
+    observeEvent(input$submit, {
+        saveData(formData())
+        shinyjs::reset("form")
+        shinyjs::hide("form")
+        shinyjs::show("submitted_msg")
+    })
+    
+    # Display new form when "submit another price" is chosen
+    observeEvent(input$submit_another, {
+        shinyjs::show("form")
+        shinyjs::hide("submitted_msg")
+    })    
 
     # Transpose Data Into a One-Row Entry
     formData <- reactive({
