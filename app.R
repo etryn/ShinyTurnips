@@ -12,6 +12,7 @@ library(shinyjs)
 library(DT)
 library(tidyverse)
 library(lubridate)
+library(RColorBrewer)
 
 # List of Ceylon Participants
 ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani", "KGB", "Rachel", "Julie")
@@ -28,6 +29,9 @@ loadData <- function() {
     files <- list.files(file.path(responsesDir), full.names = TRUE)
     data <- lapply(files, read.csv, stringsAsFactors = FALSE)
     data <- dplyr::bind_rows(data)
+}
+
+tableData <- function(data) {
     data <- data %>%
         pivot_wider(names_from = name, values_from = price) %>%
         arrange(date, ampm) %>%
@@ -39,6 +43,33 @@ loadData <- function() {
         mutate(date = format(date, "%a %b %d")) %>%
         select(-firstweek, -the.year, -the.week, Date = date, Window = ampm)
     data
+}
+
+plotData <- function(data) {
+    data <- data %>%
+        arrange(date, ampm) %>%
+        mutate(date = as.Date(date, origin = "1970-01-01")) %>%
+        mutate(
+            the.year = year(date),
+            the.week = epiweek(date)) %>%
+        filter(the.year == max(the.year) & the.week == max(the.week)) %>%
+        mutate(date = format(date, "%a")) %>%
+        mutate(datetime = paste(date, ampm, sep = " "))
+               
+    ggplot(data = data, aes(x = datetime, y = price, group = name, color = name)) +
+        geom_point() +
+        geom_line() +
+        theme_bw() +
+        scale_color_brewer(palette="Dark2") +
+        theme(
+            axis.title.x=element_blank(),
+            legend.title=element_blank(),
+            axis.title.y=element_text(size=14),
+            axis.text=element_text(size=11, color = "black"),
+            legend.text=element_text(size=12)
+            ) +
+        ylab(expression("Price"))
+        
 }
 
 # UI
@@ -93,7 +124,10 @@ ui = fluidPage(
             tabsetPanel(
                 
                 #View Current Week's Prices
-                tabPanel("Table", DT::dataTableOutput("responsesTable"))
+                tabPanel("Table", DT::dataTableOutput("responsesTable")),
+                
+                #View Current Week's Graph
+                tabPanel("Graph", plotOutput("plot"))
             )
         )
     )
@@ -171,12 +205,20 @@ server <- function(input, output, session) {
         saveData(formData())
     })
     
-    #Display Data
+    #Output Raw Data
+    data <- loadData()
+    
+    #Display Data as Table
     output$responsesTable <- DT::renderDataTable(
-        loadData(),
+        tableData(data),
         rownames = FALSE,
         options = list(searching = FALSE, lengthChange = FALSE)
     ) 
+    
+    #Display Data as Plot
+    output$plot <- renderPlot(
+        plotData(data)
+    )
 }
 
 # Run the application 
