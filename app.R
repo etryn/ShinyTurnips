@@ -54,7 +54,26 @@ plotData <- function(data) {
             the.week = epiweek(date)) %>%
         filter(the.year == max(the.year) & the.week == max(the.week)) %>%
         mutate(date = format(date, "%a")) %>%
-        mutate(datetime = paste(date, ampm, sep = " "))
+        mutate(datetime = paste(date, ampm, sep = " ")) %>%
+        mutate(datetime = case_when(
+            datetime == "Sun am" ~ "Purchase",
+            datetime == "Sun pm" ~ "Purchase",
+            TRUE ~ datetime)
+        ) %>%
+        mutate(datetime = factor(datetime, levels = c(
+            "Purchase",
+            "Mon am",
+            "Mon pm",
+            "Tues am",
+            "Tues pm",
+            "Wed am",
+            "Wed pm",
+            "Thurs am",
+            "Thurs pm",
+            "Fri am",
+            "Fri pm",
+            "Sat am",
+            "Sat pm")))
                
     ggplot(data = data, aes(x = datetime, y = price, group = name, color = name)) +
         geom_point() +
