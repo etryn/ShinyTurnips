@@ -43,3 +43,6 @@ vignettes/*.pdf
 
 # Do not track saved responses
 responses/*.csv
+
+# Do not track README.html
+readme.html

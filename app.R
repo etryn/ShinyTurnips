@@ -20,13 +20,14 @@ fieldsMandatory <- c("name", "price", "firstweek")
 fieldsAll <- c("name", "date", "ampm", "price", "firstweek")
 responsesDir <- file.path("responses")
 
-# Define data to display live in app
+# Define data to use for table and graph
 loadData <- function() {
     files <- list.files(file.path(responsesDir), full.names = TRUE)
     data <- lapply(files, read.csv, stringsAsFactors = FALSE)
     data <- dplyr::bind_rows(data)
 }
 
+# Manipulate data into viewer-friendly table
 tableData <- function(data) {
     data <- data %>%
         pivot_wider(names_from = name, values_from = price) %>%
@@ -41,6 +42,7 @@ tableData <- function(data) {
     data
 }
 
+# Manipulate data for plotting and create ggplot
 plotData <- function(data) {
     data <- data %>%
         arrange(date, ampm) %>%
@@ -96,6 +98,7 @@ ui = fluidPage(
     #Define Form
     titlePanel("Ceylon Stalk Market"),
     
+    #Sidebar for all Data Entry fields
     sidebarLayout(
         sidebarPanel(
             div(
@@ -136,6 +139,7 @@ ui = fluidPage(
             
         ),
     
+        #Main Panel for Table and Graph Views
         mainPanel(
             tabsetPanel(
                 
