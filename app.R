@@ -60,12 +60,12 @@ plotData <- function(data) {
             "Purchase",
             "Mon am",
             "Mon pm",
-            "Tues am",
-            "Tues pm",
+            "Tue am",
+            "Tue pm",
             "Wed am",
             "Wed pm",
-            "Thurs am",
-            "Thurs pm",
+            "Thu am",
+            "Thu pm",
             "Fri am",
             "Fri pm",
             "Sat am",
@@ -81,6 +81,7 @@ plotData <- function(data) {
             legend.title=element_blank(),
             axis.title.y=element_text(size=14),
             axis.text=element_text(size=11, color = "black"),
+            axis.text.x=element_text(angle = 90, hjust = 1, vjust = .5),
             legend.text=element_text(size=12)
             ) +
         ylab(expression("Price"))
@@ -227,7 +228,7 @@ server <- function(input, output, session) {
     output$responsesTable <- DT::renderDataTable(
         tableData(data),
         rownames = FALSE,
-        options = list(searching = FALSE, lengthChange = FALSE)
+        options = list(searching = FALSE, lengthChange = FALSE, dom = 't')
     ) 
     
     #Display Data as Plot
