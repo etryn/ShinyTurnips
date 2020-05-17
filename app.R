@@ -95,6 +95,8 @@ plotData <- function(data) {
 ui = fluidPage(
     
     shinyjs::useShinyjs(),
+    shiny::tags$meta(name = "apple-mobile-web-app-capable", content = "yes"),
+    shiny::tags$meta(name = "mobile-web-app-capable", content = "yes"),
     
     #Define Form
     titlePanel("Ceylon Stalk Market"),
