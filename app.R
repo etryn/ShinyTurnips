@@ -1,11 +1,7 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# ShinyTurnips
+# This is a Shiny App to log and visualize current turnip prices for Ceylon & friends
+# Author: Veronica Davé, 16may2020
+# https://github.com/etryn/ShinyTurnips
 
 library(shiny)
 library(shinyjs)
