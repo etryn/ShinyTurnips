@@ -150,7 +150,10 @@ ui = fluidPage(
                 tabPanel("Graph", plotOutput("plot"))
             )
         )
-    )
+    ),
+    hr(),
+    print(tags$a(href="https://github.com/etryn/ShinyTurnips", "ShinyTurnips")),
+    print("by etryn")
 )
 
 
