@@ -38,5 +38,8 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# OSC Files
+# OSX Files
 .DS_Store
+
+# Do not track saved responses
+responses/*.csv
