@@ -14,10 +14,10 @@ library(RColorBrewer)
 ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani", "KGB", "Rachel", "Julie")
 
 # Designate Mandatory Fields
-fieldsMandatory <- c("name", "price", "firstweek")
+fieldsMandatory <- c("name", "price")
 
 # Designate which fields to save
-fieldsAll <- c("name", "date", "ampm", "price", "firstweek")
+fieldsAll <- c("name", "date", "ampm", "price")
 responsesDir <- file.path("responses")
 
 # Define data to use for table and graph
@@ -38,7 +38,7 @@ currentData <- function(data) {
                the.week = epiweek(date)) %>%
         filter(the.year == max(the.year) & the.week == max(the.week)) %>%
         mutate(date = format(date, "%a %b %d")) %>%
-        select(-firstweek, -the.year, -the.week, Date = date, Window = ampm)
+        select(-the.year, -the.week, Date = date, Window = ampm)
     data
 }
 
@@ -133,7 +133,6 @@ ui = fluidPage(
                              value = NULL,
                              min = 20,
                              max = 800),
-                checkboxInput("firstweek", "This is my first week buying turnips in my own town.", value = FALSE),
                 actionButton("submit", "Submit", class = "btn-primary")
             ),
             
