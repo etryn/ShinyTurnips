@@ -15,7 +15,7 @@ library(base)
 ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani", "KGB", "Rachel", "Julie")
 
 # Designate Mandatory Fields
-fieldsMandatory <- c("name", "date", "ampm", "price", "firstweek")
+fieldsMandatory <- c("name", "price", "firstweek")
 
 # Define UI for application that draws a histogram
 ui = fluidPage(
@@ -47,7 +47,18 @@ ui = fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
     
-
+    # Enable the Submit button only when all mandatory fields are filled out
+    observe({
+        mandatoryFilled <-
+            vapply(fieldsMandatory,
+                   function(x) {
+                       !is.null(input[[x]]) && input[[x]] != ""
+                   },
+                   logical(1))
+        mandatoryFilled <- all(mandatoryFilled)
+        
+        shinyjs::toggleState(id = "submit", condition = mandatoryFilled)
+    })
 
 }
 
