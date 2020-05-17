@@ -27,8 +27,8 @@ loadData <- function() {
     data <- dplyr::bind_rows(data)
 }
 
-# Manipulate data into viewer-friendly table
-tableData <- function(data) {
+# Manipulate data into viewer-friendly table for current week
+currentData <- function(data) {
     data <- data %>%
         pivot_wider(names_from = name, values_from = price) %>%
         arrange(date, ampm) %>%
@@ -39,6 +39,17 @@ tableData <- function(data) {
         filter(the.year == max(the.year) & the.week == max(the.week)) %>%
         mutate(date = format(date, "%a %b %d")) %>%
         select(-firstweek, -the.year, -the.week, Date = date, Window = ampm)
+    data
+}
+
+# Manipulate data into viewer-friendly table for all weeks
+allData <- function(data) {
+    data <- data %>%
+        pivot_wider(names_from = name, values_from = price) %>%
+        arrange(desc(date), desc(ampm)) %>%
+        mutate(date = as.Date(date, origin = "1970-01-01")) %>%
+        mutate(date = format(date, "%a %b %d")) %>%
+        select(Date = date, Window = ampm, everything())
     data
 }
 
@@ -153,7 +164,10 @@ ui = fluidPage(
                 tabPanel("Table", DT::dataTableOutput("responsesTable")),
                 
                 #View Current Week's Graph
-                tabPanel("Graph", plotOutput("plot"))
+                tabPanel("Graph", plotOutput("plot")),
+                
+                #View Historic Prices
+                tabPanel("Archive", DT::dataTableOutput("archiveTable"))
             )
         )
     ),
@@ -237,11 +251,18 @@ server <- function(input, output, session) {
     #Output Raw Data
     data <- loadData()
     
-    #Display Data as Table
+    #Display Data as Table - Current Week
     output$responsesTable <- DT::renderDataTable(
-        tableData(data),
+        currentData(data),
         rownames = FALSE,
         options = list(searching = FALSE, lengthChange = FALSE, dom = 't')
+    ) 
+    
+    #Display Data as Table - All Historic Data
+    output$archiveTable <- DT::renderDataTable(
+        allData(data),
+        rownames = FALSE,
+        options = list(searching = FALSE, lengthChange = FALSE, pageLength = 10)
     ) 
     
     #Display Data as Plot
