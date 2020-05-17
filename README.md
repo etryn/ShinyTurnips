@@ -16,11 +16,4 @@ This app accepts price entries from a pre-determined group of friends and saves 
 
 * If multiple prices are entered for the same individual and the same time window, the most recent price will overwrite all previous prices. This means typos and mistakes can be corrected by re-submitting the form.
 
-## Ideas for Improvements
-
-* Highlight names or otherwise indicate when a spike is beginning
-* Ability to scroll through previous weeks in the table or graph view (or in a separate tab?)
-* Better implementation of Sunday purchase price entry
-
-
-
+* Some prediction tools may ask for the previous week's pattern. In the Archive tab, all prices recorded to date are displayed sorted newest to oldest.
