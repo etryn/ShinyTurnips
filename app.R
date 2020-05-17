@@ -17,6 +17,10 @@ ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani
 # Designate Mandatory Fields
 fieldsMandatory <- c("name", "price", "firstweek")
 
+# Designate which fields to save
+fieldsAll <- c("name", "date", "ampm", "price", "firstweek")
+responsesDir <- file.path("responses")
+
 # Define UI for application that draws a histogram
 ui = fluidPage(
     
@@ -60,6 +64,24 @@ server <- function(input, output, session) {
         shinyjs::toggleState(id = "submit", condition = mandatoryFilled)
     })
 
+    # Transpose Data Into a One-Row Entry
+    formData <- reactive({
+        data <- sapply(fieldsAll, function(x) input[[x]])
+        data <- t(data)
+        data
+    })
+    
+    # Save CSV File of Form Responses
+    saveData <- function(data) {
+        fileName <- paste(paste(data[1,1], data[1,2], data[1,3], sep = "_"), ".csv", sep = "")
+        write.csv(x = data, file = file.path(responsesDir, fileName),
+                  row.names = FALSE, quote = TRUE)
+    }
+    
+    # Save Data
+    observeEvent(input$submit, {
+        saveData(formData())
+    })
 }
 
 # Run the application 
