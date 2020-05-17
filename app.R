@@ -97,7 +97,8 @@ ui = fluidPage(
     shinyjs::useShinyjs(),
     tags$head(
         shiny::tags$meta(name = "apple-mobile-web-app-capable", content = "yes"),
-        shiny::tags$meta(name = "mobile-web-app-capable", content = "yes")
+        shiny::tags$meta(name = "mobile-web-app-capable", content = "yes"),
+        shiny::tags$meta(name = "apple-mobile-web-app-title", content="Turnips")
     ),
     
     #Define Form
