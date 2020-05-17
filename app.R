@@ -48,45 +48,57 @@ ui = fluidPage(
     
     #Define Form
     titlePanel("Ceylon Stalk Market"),
-    div(
-        id = "form",
-        selectInput("name", "Name", ceylonMembers),
-        dateInput("date", "Date",
-                  value = NULL,
-                  min = "2020-03-19",
-                  max = NULL,
-                  format = "D mm/dd/yy"),
-        radioButtons("ampm", "AM or PM Price",
-                     choiceNames = c("AM", "PM"),
-                     choiceValues = c("am", "pm")),
-        numericInput("price", "Purchase or Sell Price",
-                     value = NULL,
-                     min = 20,
-                     max = 800),
-        checkboxInput("firstweek", "This is my first week buying turnips in my own town.", value = FALSE),
-        actionButton("submit", "Submit", class = "btn-primary")
-    ),
     
-    #Submission Successful Message
-    shinyjs::hidden(
-        div(
-            id = "submitted_msg",
-            h3("Your turnip price has been logged!"),
-            actionLink("submit_another", "Submit another price")
+    sidebarLayout(
+        sidebarPanel(
+            div(
+                id = "form",
+                selectInput("name", "Name", ceylonMembers),
+                dateInput("date", "Date",
+                          value = NULL,
+                          min = "2020-03-19",
+                          max = NULL,
+                          format = "D mm/dd/yy"),
+                radioButtons("ampm", "AM or PM Price",
+                             choiceNames = c("AM", "PM"),
+                             choiceValues = c("am", "pm")),
+                numericInput("price", "Purchase or Sell Price",
+                             value = NULL,
+                             min = 20,
+                             max = 800),
+                checkboxInput("firstweek", "This is my first week buying turnips in my own town.", value = FALSE),
+                actionButton("submit", "Submit", class = "btn-primary")
+            ),
+            
+            #Submission Successful Message
+            shinyjs::hidden(
+                div(
+                    id = "submitted_msg",
+                    h3("Your turnip price has been logged!"),
+                    actionLink("submit_another", "Submit another price")
+                )
+            ),
+                
+            #Error Message
+            shinyjs::hidden(
+                span(id = "loading_msg", "Logging your price..."),
+                div(id = "error",
+                    div(br(), tags$b("Error: Something went wrong"), span(id = "error_msg"))
+                )
+            )
+            
+        ),
+    
+        mainPanel(
+            tabsetPanel(
+                
+                #View Current Week's Prices
+                tabPanel("Table", DT::dataTableOutput("responsesTable"))
+            )
         )
-    ),
-    
-    #Error Message
-    shinyjs::hidden(
-        span(id = "loading_msg", "Logging your price..."),
-        div(id = "error",
-            div(br(), tags$b("Error: Something went wrong"), span(id = "error_msg"))
-        )
-    ),
-    
-    #View Current Week's Prices
-    DT::dataTableOutput("responsesTable"),
+    )
 )
+
 
 # Server
 server <- function(input, output, session) {
