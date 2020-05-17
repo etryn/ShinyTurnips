@@ -105,11 +105,12 @@ plotData <- function(data) {
 # UI
 ui = fluidPage(
     
+    #Set Meta Tags and Header Info
     shinyjs::useShinyjs(),
     tags$head(
         shiny::tags$meta(name = "apple-mobile-web-app-capable", content = "yes"),
         shiny::tags$meta(name = "mobile-web-app-capable", content = "yes"),
-        shiny::tags$meta(name = "apple-mobile-web-app-title", content="Turnips")
+        shiny::tags$link(rel = "manifest", href = "manifest.json")
     ),
     
     #Define Form
