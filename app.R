@@ -47,12 +47,20 @@ ui = fluidPage(
         actionButton("submit", "Submit", class = "btn-primary")
     ),
     
-    #Hidden Submission Successful Div
+    #Submission Successful Message
     shinyjs::hidden(
         div(
             id = "submitted_msg",
             h3("Your turnip price has been logged!"),
             actionLink("submit_another", "Submit another price")
+        )
+    ),
+    
+    #Error Message
+    shinyjs::hidden(
+        span(id = "loading_msg", "Logging your price..."),
+        div(id = "error",
+            div(br(), tags$b("Error: "), span(id = "error_msg"))
         )
     )
 )
@@ -86,6 +94,28 @@ server <- function(input, output, session) {
         shinyjs::show("form")
         shinyjs::hide("submitted_msg")
     })    
+    
+    # Add loading and error messages
+    observeEvent(input$submit, {
+        shinyjs::disable("submit")
+        shinyjs::show("loading_msg")
+        shinyjs::hide("error")
+        
+        tryCatch({
+            saveData(formData())
+            shinyjs::reset("form")
+            shinyjs::hide("form")
+            shinyjs::show("submitted_msg")
+        },
+        error = function(err) {
+            shinyjs::html("error_msg", err$message)
+            shinyjs::show(id = "error", anim = TRUE, animType = "fade")
+        },
+        finally = {
+            shinyjs::enable("submit")
+            shinyjs::hide("loading_msg")
+        })
+    })
 
     # Transpose Data Into a One-Row Entry
     formData <- reactive({
