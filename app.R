@@ -10,8 +10,9 @@ library(tidyverse)
 library(lubridate)
 library(RColorBrewer)
 
-# List of Ceylon Participants
+# List of Ceylon Participants and Favorite Colors
 ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani", "KGB", "Rachel", "Julie")
+ceylonColors <- c("#EFA8E4", "#1F4068", "#9818D6", "#F5A31A", "#79D70F", "#40BAD5", "#50BDA1", "#CE0F3D", "#B590CA", "#DC2ADE")
 
 # Designate Mandatory Fields
 fieldsMandatory <- c("name", "price")
@@ -69,6 +70,7 @@ plotData <- function(data) {
             datetime == "Sun pm" ~ "Purchase",
             TRUE ~ datetime)
         ) %>%
+        mutate(name = factor(name, levels = ceylonMembers)) %>%
         mutate(datetime = factor(datetime, levels = c(
             "Purchase",
             "Mon am",
@@ -89,7 +91,7 @@ plotData <- function(data) {
         geom_line() +
         ylim(0,700) +
         theme_bw() +
-        scale_color_brewer(palette="Dark2") +
+        scale_color_manual(values = ceylonColors) +
         theme(
             axis.title.x=element_blank(),
             legend.title=element_blank(),
