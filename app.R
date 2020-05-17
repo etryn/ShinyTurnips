@@ -76,6 +76,7 @@ plotData <- function(data) {
     ggplot(data = data, aes(x = datetime, y = price, group = name, color = name)) +
         geom_point() +
         geom_line() +
+        ylim(0,700) +
         theme_bw() +
         scale_color_brewer(palette="Dark2") +
         theme(
