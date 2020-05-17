@@ -10,9 +10,11 @@ library(tidyverse)
 library(lubridate)
 library(RColorBrewer)
 
-# List of Ceylon Participants and Favorite Colors
-ceylonMembers <- c("Ashley", "Veronica", "Janessa", "Judy", "Andre", "WS", "Dani", "KGB", "Rachel", "Julie")
-ceylonColors <- c("#EFA8E4", "#1F4068", "#9818D6", "#F5A31A", "#79D70F", "#40BAD5", "#50BDA1", "#CE0F3D", "#B590CA", "#DC2ADE")
+# Load List of Friends and Favorite Colors
+friends <- read.table("friends.txt", header = TRUE)
+friendNames <- friends$name
+friendColors <- friends$color
+names(friendColors) <- friendNames
 
 # Designate Mandatory Fields
 fieldsMandatory <- c("name", "price")
@@ -70,7 +72,7 @@ plotData <- function(data) {
             datetime == "Sun pm" ~ "Purchase",
             TRUE ~ datetime)
         ) %>%
-        mutate(name = factor(name, levels = ceylonMembers)) %>%
+        mutate(name = factor(name, levels = friendNames)) %>%
         mutate(datetime = factor(datetime, levels = c(
             "Purchase",
             "Mon am",
@@ -91,7 +93,7 @@ plotData <- function(data) {
         geom_line() +
         ylim(0,700) +
         theme_bw() +
-        scale_color_manual(values = ceylonColors) +
+        scale_color_manual(values = friendColors) +
         theme(
             axis.title.x=element_blank(),
             legend.title=element_blank(),
@@ -125,7 +127,7 @@ ui = fluidPage(
             #Main Entry Form
             div(
                 id = "form",
-                selectInput("name", "Name", ceylonMembers),
+                selectInput("name", "Name", friendNames),
                 dateInput("date", "Date",
                           value = NULL,
                           min = "2020-03-19",

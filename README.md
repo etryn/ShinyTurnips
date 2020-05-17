@@ -6,9 +6,9 @@
 
 This app accepts price entries from a pre-determined group of friends and saves them as individual CSV files. It then compiles these CSV files into one data table to generate a tabular and graphical visualization of turnip prices from the most current week.
 
-## Use
+## How to Use
 
-1. ceylonMembers in app.R must be updated to a list of current friends' names. It would also be possible to change the name column to free-form text entry, but I did not want people to have to retype their names over and over. Free-form entry also creates the opportunity for confusion through typos and random people adding themselves.
+1. The file friends.txt must be updated to a list of current friends' names and their favorite colors. It would also be possible to change the name field to free-form text entry, but I did not want people to have to retype their names over and over. Free-form entry also creates the opportunity for confusion through typos and random people adding themselves.
 
 ## Notes
 
