@@ -88,11 +88,14 @@ plotData <- function(data) {
             "Sat pm")))
                
     ggplot(data = data, aes(x = datetime, y = price, group = name, color = name)) +
-        geom_point() +
+        geom_point(aes(size = price)) +
         geom_line() +
-        ylim(0,700) +
+        ylim(20,max(200, ceiling(max(data$price)/100)*100)) +
         theme_bw() +
         scale_color_manual(values = friendColors) +
+        scale_size(
+            limits = c(0,700),
+            breaks = c(100, 200, 300, 400, 500, 600, 700)) +
         theme(
             axis.title.x=element_blank(),
             legend.title=element_blank(),
