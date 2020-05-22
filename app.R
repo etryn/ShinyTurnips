@@ -17,7 +17,7 @@ friendColors <- friends$color
 names(friendColors) <- friendNames
 
 # Designate Mandatory Fields
-fieldsMandatory <- c("name", "price")
+fieldsMandatory <- c("name", "date", "ampm", "price") #Date is mandatory as well but will be independently evaluated for length > 0
 
 # Designate which fields to save
 fieldsAll <- c("name", "date", "ampm", "price")
@@ -129,7 +129,10 @@ ui = fluidPage(
             #Main Entry Form
             div(
                 id = "form",
-                selectInput("name", "Name", friendNames),
+                radioButtons("name", "Name",
+                             choiceNames = friendNames,
+                             choiceValues = friendNames,
+                             selected = character(0)),
                 dateInput("date", "Date",
                           value = NULL,
                           min = Sys.Date() - 3,
@@ -137,7 +140,8 @@ ui = fluidPage(
                           format = "D mm/dd/yy"),
                 radioButtons("ampm", "AM or PM Price",
                              choiceNames = c("AM", "PM"),
-                             choiceValues = c("am", "pm")),
+                             choiceValues = c("am", "pm"),
+                             selected = character(0)),
                 numericInput("price", "Purchase or Sell Price",
                              value = NULL,
                              min = 20,
@@ -194,14 +198,14 @@ server <- function(input, output, session) {
     
     # Enable the Submit button only when all mandatory fields are filled out
     observe({
-        mandatoryFilled <-
+        mandatoryFilled <- # Check if string and numeric fields are filled out
             vapply(fieldsMandatory,
                    function(x) {
-                       !is.null(input[[x]]) && input[[x]] != ""
+                       !is.null(input[[x]]) && input[[x]] != "" && !is.na(input[[x]])
                    },
                    logical(1))
+        mandatoryFilled <- c(mandatoryFilled, length(input$date) > 0) # Check if date field is filled out
         mandatoryFilled <- all(mandatoryFilled)
-        
         shinyjs::toggleState(id = "submit", condition = mandatoryFilled)
     })
     
