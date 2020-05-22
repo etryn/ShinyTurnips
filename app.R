@@ -17,7 +17,7 @@ friendColors <- friends$color
 names(friendColors) <- friendNames
 
 # Designate Mandatory Fields
-fieldsMandatory <- c("name", "date", "ampm", "price") #Date is mandatory as well but will be independently evaluated for length > 0
+fieldsMandatory <- c("name", "ampm", "price") #Date is mandatory as well but will be independently evaluated for length > 0
 
 # Designate which fields to save
 fieldsAll <- c("name", "date", "ampm", "price")
