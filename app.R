@@ -263,7 +263,7 @@ server <- function(input, output, session) {
     output$responsesTable <- DT::renderDataTable(
         currentData(data),
         rownames = FALSE,
-        options = list(searching = FALSE, lengthChange = FALSE, dom = 't', ordering = FALSE)
+        options = list(searching = FALSE, lengthChange = FALSE, dom = 't', ordering = FALSE, pageLength = 14)
     ) 
     
     #Display Data as Table - All Historic Data
