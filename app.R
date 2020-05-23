@@ -9,6 +9,7 @@ library(DT)
 library(tidyverse)
 library(lubridate)
 library(RColorBrewer)
+library(directlabels)
 
 # Load List of Friends and Favorite Colors
 friends <- read.table("friends.txt", header = TRUE)
@@ -96,6 +97,8 @@ plotData <- function(data) {
         scale_size(
             limits = c(0,700),
             breaks = c(100, 200, 300, 400, 500, 600, 700)) +
+        guides(size = FALSE) +
+        geom_dl(aes(label = name), method = list("top.bumptwice", hjust = 1, vjust = 1), color = "black") +
         theme(
             axis.title.x=element_blank(),
             legend.title=element_blank(),
