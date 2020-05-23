@@ -152,15 +152,6 @@ ui = fluidPage(
                 shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }", functions = "refresh"),
                 actionButton("refresh", "Refresh", class = "btn-info"),
             ),
-            
-            #Submission Successful Message
-            shinyjs::hidden(
-                div(
-                    id = "submitted_msg",
-                    h3("Your turnip price has been logged!"),
-                    actionLink("submit_another", "Submit another price")
-                )
-            ),
                 
             #Error Message
             shinyjs::hidden(
@@ -213,20 +204,13 @@ server <- function(input, output, session) {
     observeEvent(input$submit, {
         saveData(formData())
         shinyjs::reset("form")
-        shinyjs::hide("form")
-        shinyjs::show("submitted_msg")
+        shinyjs::js$refresh()
     })
     
     # Refresh Button
     observeEvent(input$refresh, {
         shinyjs::js$refresh()
     })
-    
-    # Display new form when "submit another price" is chosen
-    observeEvent(input$submit_another, {
-        shinyjs::show("form")
-        shinyjs::hide("submitted_msg")
-    })    
     
     # Add loading and error messages
     observeEvent(input$submit, {
