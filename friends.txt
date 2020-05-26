@@ -7,5 +7,3 @@
 "Dani"  "#e31a1c"
 "Julie" "#ff00ff"
 "Rachel"  "#6a3d9a"
-"KGB" "#888888"
-"Andre" "#000000"
