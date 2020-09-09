@@ -3,7 +3,5 @@
 "Veronica"  "#1f78b4"
 "Janessa" "#b2df8a"
 "Judy"  "#ff7f00"
-"WS"  "#33a02c"
-"Dani"  "#e31a1c"
+"Kelvin"  "#33a02c"
 "Julie" "#ff00ff"
-"Rachel"  "#6a3d9a"
