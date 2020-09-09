@@ -42,7 +42,7 @@ currentData <- function(data) {
                the.week = epiweek(date)) %>%
         filter(the.year == max(the.year) & the.week == max(the.week)) %>%
         mutate(date = format(date, "%a %b %d")) %>%
-        select(-everything(), Date = date, Window = ampm, friendNames)
+        select(-everything(), Date = date, Window = ampm, one_of(friendNames))
     data
 }
 
@@ -52,7 +52,7 @@ allData <- function(data) {
         pivot_wider(names_from = name, values_from = price) %>%
         arrange(desc(date), desc(ampm)) %>%
         mutate(date = as.Date(date, origin = "1970-01-01")) %>%
-        select(Date = date, Window = ampm, friendNames, everything())
+        select(Date = date, Window = ampm, one_of(friendNames), everything())
     data
 }
 
